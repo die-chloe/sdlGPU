@@ -3,25 +3,33 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "Build SDL3Demo (build dir)",
+			"label": "CMake: configure",
 			"command": "cmake",
 			"args": [
-				"--build",
+				"-S",
+				".",
+				"-B",
 				"build"
 			],
 			"group": "build",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"detail": "CMake template configure task"
 		},
+
 		{
 			"type": "cmake",
 			"label": "CMake: build",
 			"command": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
 			"targets": [
 				"ALL_BUILD"
 			],
 			"group": "build",
 			"problemMatcher": [],
-			"detail": "CMake template build task"
+			"detail": "CMake template build task",
+			"dependsOn": "CMake: configure"
 		}
 	]
 }
