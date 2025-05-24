@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "Build SDL3Demo (build dir)",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"build"
+			],
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"ALL_BUILD"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template build task"
+		}
+	]
+}
