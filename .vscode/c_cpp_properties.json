@@ -6,7 +6,8 @@
             "cppStandard": "c++23",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/src"
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/vendor/SDL/include"
             ],
             "defines": [
                 "_DEBUG",

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "Renderer/VertexBuffer.hpp"
 #include <SDL3/SDL_gpu.h>
 #include <SDL3/SDL_video.h>
 
@@ -23,10 +24,11 @@ class Renderer
 			const uint32_t storageBufferCount = 0,
 			const uint32_t storageTextureCount = 0
 		);
-
+		
 		SDL_GPUGraphicsPipeline* CreatePipeline(
 			SDL_GPUShader* vertexShader,
-			SDL_GPUShader* fragmentShader
+			SDL_GPUShader* fragmentShader,
+			uint8_t vertexType = 0
 		);
 
 		void ReleasePipeline(SDL_GPUGraphicsPipeline* pipeline);
@@ -34,7 +36,7 @@ class Renderer
 
 		void InitCommandBuffer();
 
-		void RenderPassDraw(SDL_GPUGraphicsPipeline* pipeline);
+		void RenderPassDraw(SDL_GPUGraphicsPipeline* pipeline, VertexBuffer* vertexBuffer = nullptr, uint32_t vertexCount = 0, uint32_t instanceCount = 1, uint32_t firstVertex = 0, uint32_t firstInstance = 0);
 
 		void SubmitCommandBuffer();
 

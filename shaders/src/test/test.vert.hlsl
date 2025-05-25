@@ -1,7 +1,7 @@
 struct VSOutput
 {
-	float4 Position : SV_Position;
-	float3 Color : TEXCOORD0;
+	float4 Position : TEXCOORD0;
+	float3 Color : TEXCOORD1;
 };
 
 

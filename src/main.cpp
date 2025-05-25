@@ -2,6 +2,9 @@
 #include <SDL3/SDL_gpu.h>
 #include <SDL3/SDL_video.h>
 
+#include "Renderer/Renderer.hpp"
+#include "Renderer/VertexBuffer.hpp"
+
 void SDLException(const std::string& message) {
     printf("%s: %s", message.c_str(), SDL_GetError());
     throw std::runtime_error(message);
@@ -39,23 +42,30 @@ int main(int argc, char* argv[]) {
 
 	// Load vertex and fragment shaders
 	// The shaders are expected to be in the "shaders" directory relative to the base path
-	SDL_GPUShader* vertexShader{renderer.LoadShader("test.vert")};
-	SDL_GPUShader* fragmentShader{renderer.LoadShader("test.frag")};
+	SDL_GPUShader* vertexShader{renderer.LoadShader("PositionColor.vert")};
+	SDL_GPUShader* fragmentShader{renderer.LoadShader("Color.frag")};
 	if (!vertexShader || !fragmentShader)
 		SDLException("Failed to load shaders");
 
 
 	// Create a basic graphics pipeline
-	auto pipeline = renderer.CreatePipeline(vertexShader, fragmentShader);
+	auto pipeline = renderer.CreatePipeline(vertexShader, fragmentShader, VERTEX_TYPE_POSITION_COLOR);
 	if (!pipeline)
 		SDLException("Failed to create graphics pipeline");
 
 
+	// Create a vertex buffer with the appropriate vertex type
+	std::vector<VertexPositionColor> vertices = {
+		{ -0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f }, // Bottom left red
+		{  0.8f, -0.8f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f }, // Bottom right green
+		{  0.0f,  0.8f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f }  // Top center blue
+	};
+
+	VertexBuffer vertexBuffer(renderer.Device, sizeof(VertexPositionColor) * vertices.size());
+
+	vertexBuffer.UploadData(vertices.data(), vertices.size() * sizeof(VertexPositionColor));
 
 
-
-
-	
 	// Main loop -----------------------------------------------------------------------------------------
 	SDL_ShowWindow(window);
 	bool running = true;
@@ -79,11 +89,13 @@ int main(int argc, char* argv[]) {
 		}
 
 
+		
+
+
 		// Process GPU commands ----------------------------------------------------------------------
 		renderer.InitCommandBuffer();
 		
-		renderer.RenderPassDraw(pipeline);
-
+		renderer.RenderPassDraw(pipeline, &vertexBuffer, vertices.size(), 1, 0, 0);
 
 		renderer.SubmitCommandBuffer();
 		// End of GPU commands ----------------------------------------------------------------------
@@ -93,6 +105,7 @@ int main(int argc, char* argv[]) {
 
 
 	// Cleanup
+	vertexBuffer.Cleanup();
 	renderer.ReleasePipeline(pipeline);
 	renderer.Cleanup();
 
