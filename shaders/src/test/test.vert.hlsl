@@ -1,7 +1,7 @@
 struct VSOutput
 {
 	float4 Position : SV_Position;
-	[[vk::location(0)]] float3 Color : COLOR0;
+	float3 Color : TEXCOORD0;
 };
 
 

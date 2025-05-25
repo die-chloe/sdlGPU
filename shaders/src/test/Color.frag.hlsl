@@ -1,6 +1,6 @@
 struct PSInput
 {
-	[[vk::location(0)]] float3 color : COLOR0;
+	float3 color : TEXCOORD0; // Texture coordinate for color
 };
 
 float4 main(PSInput input) : SV_Target0
