@@ -34,12 +34,7 @@
 			"group": "build",
 			"problemMatcher": [],
 			"detail": "CMake template build task",
-			"dependsOn": "CMake: configure",
-			"presentation": {
-				"reveal": "always",
-				"revealProblems": "onProblem",
-				"close": true
-			}
+			"dependsOn": "CMake: configure"
 		}
 	]
 }
