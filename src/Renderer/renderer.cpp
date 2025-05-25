@@ -26,6 +26,7 @@ Renderer::~Renderer()
 }
 
 
+
 SDL_GPUShader* Renderer::LoadShader(const std::string& shaderSource, const uint32_t samplerCount, const uint32_t uniformBufferCount, const uint32_t storageBufferCount, const uint32_t storageTextureCount)
 {
 
@@ -106,9 +107,6 @@ SDL_GPUShader* Renderer::LoadShader(const std::string& shaderSource, const uint3
 
 }
 
-
-
-
 SDL_GPUGraphicsPipeline* Renderer::CreatePipeline(SDL_GPUShader* vertexShader, SDL_GPUShader* fragmentShader)
 {
     SDL_GPUColorTargetDescription colorTargetDescription{};
@@ -139,8 +137,6 @@ void Renderer::ReleasePipeline(SDL_GPUGraphicsPipeline * pipeline)
     if(pipeline)
         SDL_ReleaseGPUGraphicsPipeline(Device, pipeline);
 }
-
-
 
 
 
@@ -185,11 +181,6 @@ void Renderer::SubmitCommandBuffer()
 
 void Renderer::Cleanup()
 {
-    if (m_SwapchainTexture)
-    {
-        SDL_ReleaseGPUTexture(Device, m_SwapchainTexture);
-        m_SwapchainTexture = nullptr;
-    }
     if (Device)
     {
         SDL_DestroyGPUDevice(Device);

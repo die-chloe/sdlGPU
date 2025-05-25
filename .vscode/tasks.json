@@ -13,12 +13,7 @@
 			],
 			"group": "build",
 			"problemMatcher": [],
-			"detail": "CMake template configure task",
-			"presentation": {
-				"reveal": "silent",
-				"revealProblems": "onProblem",
-				"close": true
-			}
+			"detail": "CMake template configure task"
 		},
 
 		{
