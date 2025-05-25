@@ -13,7 +13,12 @@
 			],
 			"group": "build",
 			"problemMatcher": [],
-			"detail": "CMake template configure task"
+			"detail": "CMake template configure task",
+			"presentation": {
+				"reveal": "silent",
+				"revealProblems": "onProblem",
+				"close": true
+			}
 		},
 
 		{
@@ -29,7 +34,12 @@
 			"group": "build",
 			"problemMatcher": [],
 			"detail": "CMake template build task",
-			"dependsOn": "CMake: configure"
+			"dependsOn": "CMake: configure",
+			"presentation": {
+				"reveal": "always",
+				"revealProblems": "onProblem",
+				"close": true
+			}
 		}
 	]
 }

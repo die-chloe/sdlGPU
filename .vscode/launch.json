@@ -11,9 +11,9 @@
             "program": "${workspaceFolder}/build/Debug/sdlGPU.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}/build/Debug/",
             "environment": [],
-            "console": "internalConsole",
+            "console": "externalTerminal",
             "preLaunchTask": "CMake: build"            
         }
     ]
