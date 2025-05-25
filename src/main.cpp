@@ -39,14 +39,14 @@ int main(int argc, char* argv[]) {
 
 	// Load vertex and fragment shaders
 	// The shaders are expected to be in the "shaders" directory relative to the base path
-	SDL_GPUShader* vertexShader{renderer.LoadShader("test.vert")};
-	SDL_GPUShader* fragmentShader{renderer.LoadShader("test.frag")};
+	SDL_GPUShader* vertexShader{renderer.LoadShader("PositionColor.vert")};
+	SDL_GPUShader* fragmentShader{renderer.LoadShader("Color.frag")};
 	if (!vertexShader || !fragmentShader)
 		SDLException("Failed to load shaders");
 
 
 	// Create a basic graphics pipeline
-	auto pipeline = renderer.CreatePipeline(vertexShader, fragmentShader);
+	auto pipeline = renderer.CreatePipeline(vertexShader, fragmentShader, VERTEX_TYPE_POSITION_COLOR);
 	if (!pipeline)
 		SDLException("Failed to create graphics pipeline");
 

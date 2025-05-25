@@ -10,15 +10,17 @@ set(CMAKE_CXX_STANDARD 23)
 set(LIBS)
 
 add_subdirectory(vendor/SDL)
+add_subdirectory(vendor/glm)
 
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 #set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
-target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
+target_link_libraries(${PROJECT_NAME} SDL3::SDL3 glm::glm)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/vendor/SDL/include
+    ${CMAKE_SOURCE_DIR}/vendor/glm
 )
 
 if(WIN32)

@@ -23,10 +23,11 @@ class Renderer
 			const uint32_t storageBufferCount = 0,
 			const uint32_t storageTextureCount = 0
 		);
-
+		
 		SDL_GPUGraphicsPipeline* CreatePipeline(
 			SDL_GPUShader* vertexShader,
-			SDL_GPUShader* fragmentShader
+			SDL_GPUShader* fragmentShader,
+			uint8_t vertexType = 0
 		);
 
 		void ReleasePipeline(SDL_GPUGraphicsPipeline* pipeline);
