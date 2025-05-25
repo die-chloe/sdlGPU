@@ -5,8 +5,6 @@
 #include <string>
 #include <SDL3/SDL.h>
 
-#include "Renderer/Renderer.hpp"
-
 void SDLException(const std::string& message);
 extern const char* BasePath;
 
@@ -23,7 +21,7 @@ typedef struct VertexPosition
 typedef struct VertexPositionColor
 {
     float x, y, z;
-    uint8_t r, g, b, a; // Color components
+    float r, g, b, a; // Color components
 } VertexPositionColor;
 
 #define VERTEX_TYPE_POSITION_TEXTURE uint8_t(3)
@@ -37,7 +35,7 @@ typedef struct VertexPositionTexture
 typedef struct VertexPositionColorTexture
 {
     float x, y, z;
-    uint8_t r, g, b, a; // Color components
+    float r, g, b, a; // Color components
     float u, v; // Texture coordinates
 } VertexPositionColorTexture;
 
@@ -61,7 +59,7 @@ typedef struct VertexPositionNormalColor
 {
     float x, y, z;
     float nx, ny, nz; // Normal vector
-    uint8_t r, g, b, a; // Color components
+    float r, g, b, a; // Color components
 } VertexPositionNormalColor;
 
 #define VERTEX_TYPE_POSITION_NORMAL_COLOR_TEXTURE uint8_t(8)
@@ -69,6 +67,6 @@ typedef struct VertexPositionNormalColorTexture
 {
     float x, y, z;
     float nx, ny, nz; // Normal vector
-    uint8_t r, g, b, a; // Color components
+    float r, g, b, a; // Color components
     float u, v; // Texture coordinates
 } VertexPositionNormalColorTexture;

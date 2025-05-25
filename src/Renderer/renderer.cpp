@@ -159,10 +159,10 @@ void Renderer::InitCommandBuffer()
 		SDLException("Failed to acquire GPU command buffer");
 
 	
-	SDL_AcquireGPUSwapchainTexture(m_CommandBuffer, m_Window, &m_SwapchainTexture, nullptr, nullptr);
+	SDL_WaitAndAcquireGPUSwapchainTexture(m_CommandBuffer, m_Window, &m_SwapchainTexture, nullptr, nullptr);
 }
 
-void Renderer::RenderPassDraw(SDL_GPUGraphicsPipeline *pipeline)
+void Renderer::RenderPassDraw(SDL_GPUGraphicsPipeline *pipeline, VertexBuffer* vertexBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 {
 	if(!m_SwapchainTexture)
 	{
@@ -180,7 +180,17 @@ void Renderer::RenderPassDraw(SDL_GPUGraphicsPipeline *pipeline)
 	SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(m_CommandBuffer, colorTargets.data(), colorTargets.size(), nullptr);
 
 	SDL_BindGPUGraphicsPipeline(renderPass, pipeline);
-	SDL_DrawGPUPrimitives(renderPass, 3, 1, 0, 0);
+
+	if(vertexBuffer)
+	{
+		SDL_GPUBufferBinding vertexBufferBinding{};
+		vertexBufferBinding.buffer = vertexBuffer->GetVertexBuffer();
+		vertexBufferBinding.offset = 0;
+		
+		SDL_BindGPUVertexBuffers(renderPass, 0, &vertexBufferBinding, 1);
+	}
+
+	SDL_DrawGPUPrimitives(renderPass, vertexCount, instanceCount, firstVertex, firstInstance);
 	
 	SDL_EndGPURenderPass(renderPass);
 }
