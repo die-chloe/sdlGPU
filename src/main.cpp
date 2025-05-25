@@ -159,6 +159,10 @@ int main(int argc, char* argv[]) {
 	if(!fragmentShader)
 		throw SDLException{"Failed to load fragment shader"};
 
+
+
+
+	// Create a basic graphics pipeline ------------------------------------------------------------------------
 	SDL_GPUColorTargetDescription colorTargetDescription{};
 	colorTargetDescription.format = SDL_GetGPUSwapchainTextureFormat(device, window);
 	std::vector colorTargetDescriptions{ colorTargetDescription };
@@ -176,14 +180,20 @@ int main(int argc, char* argv[]) {
 	pipelineCreateInfo.rasterizer_state.fill_mode = SDL_GPU_FILLMODE_FILL;
 	pipelineCreateInfo.rasterizer_state.cull_mode = SDL_GPU_CULLMODE_NONE;
 	pipelineCreateInfo.target_info = targetInfo;
-
+	
 	
 	SDL_GPUGraphicsPipeline* pipeline{SDL_CreateGPUGraphicsPipeline(device, &pipelineCreateInfo)};
-
+	
 	if (!pipeline)
-		throw SDLException{"Failed to create GPU graphics pipeline: " + std::string(SDL_GetError())};
-
-
+	throw SDLException{"Failed to create GPU graphics pipeline: " + std::string(SDL_GetError())};
+	
+	
+	
+	SDL_ReleaseGPUShader(device, vertexShader);
+	SDL_ReleaseGPUShader(device, fragmentShader);
+	
+	
+	
 	// Main loop -----------------------------------------------------------------------------------------
 	SDL_ShowWindow(window);
 	bool running = true;
@@ -242,9 +252,7 @@ int main(int argc, char* argv[]) {
 
 
 	// Cleanup
-	SDL_ReleaseGPUShader(device, vertexShader);
-	SDL_ReleaseGPUShader(device, fragmentShader);
-
+	SDL_ReleaseGPUGraphicsPipeline(device, pipeline);
 	SDL_DestroyGPUDevice(device);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
