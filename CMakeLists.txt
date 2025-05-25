@@ -13,7 +13,7 @@ add_subdirectory(vendor/SDL)
 
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+#set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
 target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
 
 if(WIN32)
@@ -26,3 +26,10 @@ if(WIN32)
         $<TARGET_FILE_DIR:${PROJECT_NAME}>
     )
 endif()
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/shaders/compiled
+    $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+)
