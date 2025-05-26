@@ -1,9 +1,9 @@
 #include "common.hpp"
 #include <SDL3/SDL_gpu.h>
 #include <SDL3/SDL_video.h>
+#include <glm/glm.hpp>
 
 #include "Renderer/Renderer.hpp"
-#include "Renderer/VertexBuffer.hpp"
 
 void SDLException(const std::string& message) {
     printf("%s: %s", message.c_str(), SDL_GetError());
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
 	InitializeAssetLoader();
 
-	SDL_Window* window = SDL_CreateWindow("SDL3 Window", 1920, 1080, SDL_WINDOW_RESIZABLE);
+	SDL_Window* window = SDL_CreateWindow("SDL3 Window", 1080, 1080, SDL_WINDOW_RESIZABLE);
 	if (!window)
 		SDLException("Failed to create SDL window");
 
@@ -61,9 +61,20 @@ int main(int argc, char* argv[]) {
 		{  0.0f,  0.8f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f }  // Top center blue
 	};
 
-	VertexBuffer vertexBuffer(renderer.Device, sizeof(VertexPositionColor) * vertices.size());
+	std::vector<glm::vec2> positions = {
+		{ -0.8f, -0.8f },
+		{  0.8f, -0.8f },
+		{  0.0f,  0.8f }
+	};
 
-	vertexBuffer.UploadData(vertices.data(), vertices.size() * sizeof(VertexPositionColor));
+	glm::mat2x2 rotationMatrix = {
+		{ glm::cos(0.016f), -glm::sin(0.016f) },
+		{ glm::sin(0.016f),  glm::cos(0.016f) }
+	};
+
+	VertexBuffer vertexBuffer(renderer.Device, sizeof(VertexPositionColor) * vertices.size());
+	TransferBuffer transferBuffer(renderer.Device, sizeof(VertexPositionColor) * vertices.size());
+
 
 
 	// Main loop -----------------------------------------------------------------------------------------
@@ -87,15 +98,26 @@ int main(int argc, char* argv[]) {
 				break;
 			}
 		}
-
-
 		
+		int i = 0;
+		for(auto& position : positions)
+		{
+			position = rotationMatrix * position; // Rotate the position
+			// Update the vertex positions in the vertices vector
+			vertices[i].x = position.x;
+			vertices[i].y = position.y;
+			vertices[i].z = 0.0f; // Keep z at 0 for 2D rendering
+
+			i++;
+		}
 
 
 		// Process GPU commands ----------------------------------------------------------------------
 		renderer.InitCommandBuffer();
-		
-		renderer.RenderPassDraw(pipeline, &vertexBuffer, vertices.size(), 1, 0, 0);
+
+		transferBuffer.UploadVertexBuffer(vertexBuffer, vertices.data());
+
+		renderer.RenderPassDraw(pipeline, vertices.size(), &vertexBuffer, 1, 0, 0);
 
 		renderer.SubmitCommandBuffer();
 		// End of GPU commands ----------------------------------------------------------------------
@@ -105,6 +127,7 @@ int main(int argc, char* argv[]) {
 
 
 	// Cleanup
+	transferBuffer.Cleanup();
 	vertexBuffer.Cleanup();
 	renderer.ReleasePipeline(pipeline);
 	renderer.Cleanup();

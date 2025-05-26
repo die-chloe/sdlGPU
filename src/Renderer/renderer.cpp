@@ -1,5 +1,4 @@
 #include "Renderer.hpp"
-#include "VertexBuffer.hpp"
 
 
 Renderer::Renderer(SDL_Window* window)
@@ -29,7 +28,15 @@ Renderer::~Renderer()
 }
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Loads a shader from the specified source file.
+/// @param shaderSource The source file of the shader.
+/// @param samplerCount The number of sampler bindings required by the shader.
+/// @param uniformBufferCount The number of uniform buffer bindings required by the shader.
+/// @param storageBufferCount The number of storage buffer bindings required by the shader.
+/// @param storageTextureCount The number of storage texture bindings required by the shader.
+/// @return A pointer to the loaded shader, or nullptr on failure.
+///////////////////////////////////////////////////////////////////////////////////////////////////
 SDL_GPUShader* Renderer::LoadShader(const std::string& shaderSource, const uint32_t samplerCount, const uint32_t uniformBufferCount, const uint32_t storageBufferCount, const uint32_t storageTextureCount)
 {
 
@@ -110,6 +117,18 @@ SDL_GPUShader* Renderer::LoadShader(const std::string& shaderSource, const uint3
 
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Creates a graphics pipeline with the specified vertex and fragment shaders.
+///
+/// This function sets up the graphics pipeline with default settings for color targets,
+/// rasterization, and vertex input state based on the provided vertex type. It also handles
+/// the release of the shaders after the pipeline is created.
+///
+/// @param vertexShader The vertex shader to use in the pipeline.
+/// @param fragmentShader The fragment shader to use in the pipeline.
+/// @param vertexType The type of vertex to use in the pipeline.
+/// @return A pointer to the created graphics pipeline, or nullptr on failure.
+///////////////////////////////////////////////////////////////////////////////////////////////////
 SDL_GPUGraphicsPipeline* Renderer::CreatePipeline(SDL_GPUShader* vertexShader, SDL_GPUShader* fragmentShader, uint8_t vertexType)
 {
 	SDL_GPUColorTargetDescription colorTargetDescription{};
@@ -151,7 +170,6 @@ void Renderer::ReleasePipeline(SDL_GPUGraphicsPipeline * pipeline)
 }
 
 
-
 void Renderer::InitCommandBuffer()
 {
 	m_CommandBuffer = SDL_AcquireGPUCommandBuffer(Device);
@@ -162,7 +180,21 @@ void Renderer::InitCommandBuffer()
 	SDL_WaitAndAcquireGPUSwapchainTexture(m_CommandBuffer, m_Window, &m_SwapchainTexture, nullptr, nullptr);
 }
 
-void Renderer::RenderPassDraw(SDL_GPUGraphicsPipeline *pipeline, VertexBuffer* vertexBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/// @brief Starts a basic render pass with the swapchain texture as the color target.
+///
+/// This function sets up the render pass with a clear color and binds the specified graphics pipeline.
+/// If a vertex buffer is provided, it binds the vertex buffer to the render pass.
+/// It then issues a draw command for the specified number of vertices and instances.
+/// 
+/// @param pipeline The graphics pipeline to bind for the render pass.
+/// @param vertexBuffer The vertex buffer to bind for the draw command (optional).
+/// @param vertexCount The number of vertices to draw.
+/// @param instanceCount The number of instances to draw (default is 1).
+/// @param firstVertex The index of the first vertex to draw (default is 0).
+/// @param firstInstance The index of the first instance to draw (default is 0).
+///////////////////////////////////////////////////////////////////////////////////////////////////
+void Renderer::RenderPassDraw(SDL_GPUGraphicsPipeline *pipeline, uint32_t vertexCount, VertexBuffer* vertexBuffer, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 {
 	if(!m_SwapchainTexture)
 	{
@@ -184,7 +216,7 @@ void Renderer::RenderPassDraw(SDL_GPUGraphicsPipeline *pipeline, VertexBuffer* v
 	if(vertexBuffer)
 	{
 		SDL_GPUBufferBinding vertexBufferBinding{};
-		vertexBufferBinding.buffer = vertexBuffer->GetVertexBuffer();
+		vertexBufferBinding.buffer = vertexBuffer->Buffer;
 		vertexBufferBinding.offset = 0;
 		
 		SDL_BindGPUVertexBuffers(renderPass, 0, &vertexBufferBinding, 1);
