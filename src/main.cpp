@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
 	InitializeAssetLoader();
 
-	SDL_Window* window = SDL_CreateWindow("SDL3 Window", 1080, 1080, SDL_WINDOW_RESIZABLE);
+	SDL_Window* window = SDL_CreateWindow("Triangle!", 1080, 1080, SDL_WINDOW_RESIZABLE);
 	if (!window)
 		SDLException("Failed to create SDL window");
 
@@ -62,9 +62,9 @@ int main(int argc, char* argv[]) {
 	};
 
 	std::vector<glm::vec2> positions = {
-		{ -0.8f, -0.8f },
-		{  0.8f, -0.8f },
-		{  0.0f,  0.8f }
+		{ glm::sin(0) * 0.8f, glm::cos(0) * 0.8f },
+		{ glm::sin(6.283f/3) * 0.8f, glm::cos(6.283f/3) * 0.8f },
+		{ glm::sin(6.283f*2/3) * 0.8f, glm::cos(6.283f*2/3) * 0.8f }
 	};
 
 	glm::mat2x2 rotationMatrix = {
