@@ -29,7 +29,7 @@ VertexBuffer::~VertexBuffer()
 /// @param vertexBufferDescriptions A vector to store the vertex buffer descriptions.
 /// @param vertexInputState The vertex input state to populate with the retrieved information.
 ////////////////////////////////////////////////////////////////////////////////
-void VertexBuffer::GetVertexInfo(uint8_t vertexType,
+void VertexBuffer::GetVertexInfo(VERTEX_TYPE vertexType,
 								 std::vector<SDL_GPUVertexAttribute> &vertexAttributes,
                                  std::vector<SDL_GPUVertexBufferDescription> &vertexBufferDescriptions,
 								 SDL_GPUVertexInputState &vertexInputState)
@@ -45,99 +45,84 @@ void VertexBuffer::GetVertexInfo(uint8_t vertexType,
 	
 	SDL_GPUVertexAttribute positionAttribute{};
 	SDL_GPUVertexAttribute colorAttribute{};
-	SDL_GPUVertexAttribute textureAttribute{};
+	SDL_GPUVertexAttribute uvAttribute{};
 	SDL_GPUVertexAttribute normalAttribute{};
+
+	
+	positionAttribute.buffer_slot = 0;
+	positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+
+	
+	colorAttribute.buffer_slot = 0;
+	colorAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4_NORM;
+
+			
+	uvAttribute.buffer_slot = 0;
+	uvAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
 
 	switch (vertexType)
 	{
 	case VERTEX_TYPE_POSITION:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
+
 		
-
 		vertexBufferDescription.pitch = sizeof(VertexPosition);
-
 		vertexInputState.num_vertex_attributes = 1;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 		break;
 	
 
 	case VERTEX_TYPE_POSITION_COLOR:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		colorAttribute.buffer_slot = 0;
-		colorAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4;
-		colorAttribute.offset = sizeof(float) * 3; // After position
+		colorAttribute.offset = sizeof(glm::vec3); // After position
 		colorAttribute.location = 1;
-
 		vertexAttributes.push_back(colorAttribute);
 
-		
-		vertexBufferDescription.pitch = sizeof(VertexPositionColor);
 
+		vertexBufferDescription.pitch = sizeof(VertexPositionColor);
 		vertexInputState.num_vertex_attributes = 2;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 
 		break;
 
 
-	case VERTEX_TYPE_POSITION_TEXTURE:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+	case VERTEX_TYPE_POSITION_UV:
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		
-		textureAttribute.buffer_slot = 0;
-		textureAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-		textureAttribute.offset = sizeof(float) * 3; // After position
-		textureAttribute.location = 1;
-		vertexAttributes.push_back(textureAttribute);
+
+		uvAttribute.offset = sizeof(glm::vec3); // After position
+		uvAttribute.location = 1;
+		vertexAttributes.push_back(uvAttribute);
 
 
-		vertexBufferDescription.pitch = sizeof(VertexPositionTexture);
+		vertexBufferDescription.pitch = sizeof(VertexPositionUV);
 		vertexInputState.num_vertex_attributes = 2;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 
 		break;
 	
-	case VERTEX_TYPE_POSITION_COLOR_TEXTURE:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+	case VERTEX_TYPE_POSITION_COLOR_UV:
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		
-		colorAttribute.buffer_slot = 0;
-		colorAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4;
-		colorAttribute.offset = sizeof(float) * 3; // After position
+		colorAttribute.offset = sizeof(glm::vec3); // After position
 		colorAttribute.location = 1;
-
 		vertexAttributes.push_back(colorAttribute);
 
-		
-		textureAttribute.buffer_slot = 0;
-		textureAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-		textureAttribute.offset = sizeof(float) * 7; // After position and color
-		textureAttribute.location = 2;
-
-		vertexAttributes.push_back(textureAttribute);
+		uvAttribute.offset = sizeof(glm::vec3) + sizeof(uint8_t) * 4; // After position and color
+		uvAttribute.location = 2;
+		vertexAttributes.push_back(uvAttribute);
 
 		
-		vertexBufferDescription.pitch = sizeof(VertexPositionColorTexture);
+		vertexBufferDescription.pitch = sizeof(VertexPositionColorUV);
 		vertexInputState.num_vertex_attributes = 3;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 
@@ -145,19 +130,12 @@ void VertexBuffer::GetVertexInfo(uint8_t vertexType,
 	
 
 	case VERTEX_TYPE_POSITION_NORMAL:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		
-		normalAttribute.buffer_slot = 0;
-		normalAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-		normalAttribute.offset = sizeof(float) * 3; // After position
+		normalAttribute.offset = sizeof(glm::vec3); // After position
 		normalAttribute.location = 1;
-
 		vertexAttributes.push_back(normalAttribute);
 
 		
@@ -168,32 +146,21 @@ void VertexBuffer::GetVertexInfo(uint8_t vertexType,
 		break;
 	
 
-	case VERTEX_TYPE_POSITION_NORMAL_TEXTURE:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+	case VERTEX_TYPE_POSITION_NORMAL_UV:
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		
-		normalAttribute.buffer_slot = 0;
-		normalAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-		normalAttribute.offset = sizeof(float) * 3; // After position
+		normalAttribute.offset = sizeof(glm::vec3); // After position
 		normalAttribute.location = 1;
-
 		vertexAttributes.push_back(normalAttribute);
 
-		
-		textureAttribute.buffer_slot = 0;
-		textureAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-		textureAttribute.offset = sizeof(float) * 6; // After position and normal
-		textureAttribute.location = 2;
-
-		vertexAttributes.push_back(textureAttribute);
+		uvAttribute.offset = sizeof(glm::vec3) * 2; // After position and normal
+		uvAttribute.location = 2;
+		vertexAttributes.push_back(uvAttribute);
 
 		
-		vertexBufferDescription.pitch = sizeof(VertexPositionNormalTexture);
+		vertexBufferDescription.pitch = sizeof(VertexPositionNormalUV);
 		vertexInputState.num_vertex_attributes = 3;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 
@@ -201,70 +168,44 @@ void VertexBuffer::GetVertexInfo(uint8_t vertexType,
 
 
 	case VERTEX_TYPE_POSITION_NORMAL_COLOR:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		
-		normalAttribute.buffer_slot = 0;
-		normalAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-		normalAttribute.offset = sizeof(float) * 3; // After position
+		normalAttribute.offset = sizeof(glm::vec3); // After position
 		normalAttribute.location = 1;
-
 		vertexAttributes.push_back(normalAttribute);
 
-		
-		colorAttribute.buffer_slot = 0;
-		colorAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4;
-		colorAttribute.offset = sizeof(float) * 6; // After position and normal
+		colorAttribute.offset = sizeof(glm::vec3) * 2; // After position and normal
 		colorAttribute.location = 2;
-
 		vertexAttributes.push_back(colorAttribute);
-
 		
+
 		vertexBufferDescription.pitch = sizeof(VertexPositionNormalColor);
 		vertexInputState.num_vertex_attributes = 3;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 
 		break;
 
-	case VERTEX_TYPE_POSITION_NORMAL_COLOR_TEXTURE:
-		positionAttribute.buffer_slot = 0;
-		positionAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
+	case VERTEX_TYPE_POSITION_NORMAL_COLOR_UV:
 		positionAttribute.offset = 0;
 		positionAttribute.location = 0;
-		
 		vertexAttributes.push_back(positionAttribute);
 
-		
-		normalAttribute.buffer_slot = 0;
-		normalAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3;
-		normalAttribute.offset = sizeof(float) * 3; // After position
+		normalAttribute.offset = sizeof(glm::vec3); // After position
 		normalAttribute.location = 1;
-
 		vertexAttributes.push_back(normalAttribute);
 
-		
-		colorAttribute.buffer_slot = 0;
-		colorAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT4;
-		colorAttribute.offset = sizeof(float) * 6; // After position and normal
+		colorAttribute.offset = sizeof(glm::vec3) * 2; // After position and normal
 		colorAttribute.location = 2;
-
 		vertexAttributes.push_back(colorAttribute);
 
-		
-		textureAttribute.buffer_slot = 0;
-		textureAttribute.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2;
-		textureAttribute.offset = sizeof(float) * 10; // After position, normal, and color
-		textureAttribute.location = 3;
+		uvAttribute.offset = sizeof(glm::vec3) * 2 + sizeof(uint8_t) * 4; // After position, normal, and color
+		uvAttribute.location = 3;
+		vertexAttributes.push_back(uvAttribute);
 
-		vertexAttributes.push_back(textureAttribute);
 
-		
-		vertexBufferDescription.pitch = sizeof(VertexPositionNormalColorTexture);
+		vertexBufferDescription.pitch = sizeof(VertexPositionNormalColorUV);
 		vertexInputState.num_vertex_attributes = 4;
 		vertexInputState.vertex_attributes = vertexAttributes.data();
 

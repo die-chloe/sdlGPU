@@ -1,7 +1,6 @@
 #include "common.hpp"
 #include <SDL3/SDL_gpu.h>
 #include <SDL3/SDL_video.h>
-#include <glm/glm.hpp>
 
 #include "Renderer/Renderer.hpp"
 
@@ -56,9 +55,9 @@ int main(int argc, char* argv[]) {
 
 	// Create a vertex buffer with the appropriate vertex type
 	std::vector<VertexPositionColor> vertices = {
-		{ -0.8f, -0.8f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f }, // Bottom left red
-		{  0.8f, -0.8f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f }, // Bottom right green
-		{  0.0f,  0.8f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f }  // Top center blue
+		{ glm::vec4{-0.8f, -0.8f, 0.0f, 1.0f}, 255, 0, 0, 255 }, // Bottom left red
+		{ glm::vec4{ 0.8f, -0.8f, 0.0f, 1.0f}, 0, 255, 0, 255 }, // Bottom right green
+		{ glm::vec4{ 0.0f,  0.8f, 0.0f, 1.0f}, 0, 0, 255, 255 }  // Top center blue
 	};
 
 	std::vector<glm::vec2> positions = {
@@ -104,9 +103,9 @@ int main(int argc, char* argv[]) {
 		{
 			position = rotationMatrix * position; // Rotate the position
 			// Update the vertex positions in the vertices vector
-			vertices[i].x = position.x;
-			vertices[i].y = position.y;
-			vertices[i].z = 0.0f; // Keep z at 0 for 2D rendering
+			vertices[i].position.x = position.x;
+			vertices[i].position.y = position.y;
+			vertices[i].position.z = 0.0f; // Keep z at 0 for 2D rendering
 
 			i++;
 		}

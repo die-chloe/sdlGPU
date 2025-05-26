@@ -19,7 +19,7 @@ class VertexBuffer
             }
         }
 
-        static void GetVertexInfo(uint8_t vertexType,
+        static void GetVertexInfo(VERTEX_TYPE vertexType,
             std::vector<SDL_GPUVertexAttribute>& attributes,
             std::vector<SDL_GPUVertexBufferDescription>& buffers,
             SDL_GPUVertexInputState& vertexInputState);

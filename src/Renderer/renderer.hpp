@@ -28,7 +28,7 @@ class Renderer
 		SDL_GPUGraphicsPipeline* CreatePipeline(
 			SDL_GPUShader* vertexShader,
 			SDL_GPUShader* fragmentShader,
-			uint8_t vertexType = 0
+			VERTEX_TYPE vertexType = VERTEX_TYPE_NONE
 		);
 
 		void ReleasePipeline(SDL_GPUGraphicsPipeline* pipeline);

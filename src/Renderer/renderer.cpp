@@ -129,7 +129,7 @@ SDL_GPUShader* Renderer::LoadShader(const std::string& shaderSource, const uint3
 /// @param vertexType The type of vertex to use in the pipeline.
 /// @return A pointer to the created graphics pipeline, or nullptr on failure.
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-SDL_GPUGraphicsPipeline* Renderer::CreatePipeline(SDL_GPUShader* vertexShader, SDL_GPUShader* fragmentShader, uint8_t vertexType)
+SDL_GPUGraphicsPipeline* Renderer::CreatePipeline(SDL_GPUShader* vertexShader, SDL_GPUShader* fragmentShader, VERTEX_TYPE vertexType)
 {
 	SDL_GPUColorTargetDescription colorTargetDescription{};
 	colorTargetDescription.format = SDL_GetGPUSwapchainTextureFormat(Device, m_Window);

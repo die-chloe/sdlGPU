@@ -4,69 +4,74 @@
 #include <vector>
 #include <string>
 #include <SDL3/SDL.h>
+#include <glm/glm.hpp>
 
 void SDLException(const std::string& message);
 extern const char* BasePath;
 
 
-#define VERTEX_TYPE_NONE uint8_t(0)
+typedef enum VERTEX_TYPE
+{
+    VERTEX_TYPE_NONE,
+    VERTEX_TYPE_POSITION,
+    VERTEX_TYPE_POSITION_COLOR,
+    VERTEX_TYPE_POSITION_UV,
+    VERTEX_TYPE_POSITION_COLOR_UV,
+    VERTEX_TYPE_POSITION_NORMAL,
+    VERTEX_TYPE_POSITION_NORMAL_UV,
+    VERTEX_TYPE_POSITION_NORMAL_COLOR,
+    VERTEX_TYPE_POSITION_NORMAL_COLOR_UV
+} VertexType;
 
-#define VERTEX_TYPE_POSITION uint8_t(1)
 typedef struct VertexPosition
 {
-    float x, y, z;
+    glm::vec3 position; // Position in 3D space
 } VertexPosition;
 
-#define VERTEX_TYPE_POSITION_COLOR uint8_t(2)
+
 typedef struct VertexPositionColor
 {
-    float x, y, z;
-    float r, g, b, a; // Color components
+    glm::vec3 position; // Position in 3D space
+    uint8_t r, g, b, a; // Color components
 } VertexPositionColor;
 
-#define VERTEX_TYPE_POSITION_TEXTURE uint8_t(3)
-typedef struct VertexPositionTexture
+typedef struct VertexPositionUV
 {
-    float x, y, z;
-    float u, v; // Texture coordinates
-} VertexPositionTexture;
+    glm::vec3 position; // Position in 3D space
+    glm::vec2 uv; // Texture coordinates
+} VertexPositionUV;
 
-#define VERTEX_TYPE_POSITION_COLOR_TEXTURE uint8_t(4)
-typedef struct VertexPositionColorTexture
+typedef struct VertexPositionColorUV
 {
-    float x, y, z;
-    float r, g, b, a; // Color components
-    float u, v; // Texture coordinates
-} VertexPositionColorTexture;
+    glm::vec3 position; // Position in 3D space
+    uint8_t r, g, b, a; // Color components
+    glm::vec2 uv; // Texture coordinates
+} VertexPositionColorUV;
 
-#define VERTEX_TYPE_POSITION_NORMAL uint8_t(5)
 typedef struct VertexPositionNormal
 {
-    float x, y, z;
-    float nx, ny, nz; // Normal vector
+    glm::vec3 position; // Position in 3D space
+    glm::vec3 normal; // Normal vector
 } VertexPositionNormal;
 
-#define VERTEX_TYPE_POSITION_NORMAL_TEXTURE uint8_t(6)
-typedef struct VertexPositionNormalTexture
+typedef struct VertexPositionNormalUV
 {
-    float x, y, z;
-    float nx, ny, nz; // Normal vector
-    float u, v; // Texture coordinates
-} VertexPositionNormalTexture;
+    glm::vec3 position; // Position in 3D space
+    glm::vec3 normal; // Normal vector
+    glm::vec2 uv; // Texture coordinates
+} VertexPositionNormalUV;
 
-#define VERTEX_TYPE_POSITION_NORMAL_COLOR uint8_t(7)
 typedef struct VertexPositionNormalColor
 {
-    float x, y, z;
-    float nx, ny, nz; // Normal vector
-    float r, g, b, a; // Color components
+    glm::vec3 position; // Position in 3D space
+    glm::vec3 normal; // Normal vector
+    uint8_t r, g, b, a; // Color components
 } VertexPositionNormalColor;
 
-#define VERTEX_TYPE_POSITION_NORMAL_COLOR_TEXTURE uint8_t(8)
-typedef struct VertexPositionNormalColorTexture
+typedef struct VertexPositionNormalColorUV
 {
-    float x, y, z;
-    float nx, ny, nz; // Normal vector
-    float r, g, b, a; // Color components
-    float u, v; // Texture coordinates
-} VertexPositionNormalColorTexture;
+    glm::vec3 position; // Position in 3D space
+    glm::vec3 normal; // Normal vector
+    uint8_t r, g, b, a; // Color components
+    glm::vec2 uv; // Texture coordinates
+} VertexPositionNormalColorUV;
